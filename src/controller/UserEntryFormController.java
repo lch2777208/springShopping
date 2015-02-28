@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import dao.UserDaoImpl;
 import utils.UserEntryValidator;
 import utils.WebConstants;
 
@@ -37,10 +38,34 @@ public class UserEntryFormController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private UserDaoImpl userDaoImpl;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String toUserEntryView() {
 		return "userentryform/userEntry";
+	}
+	
+	// 유저 정보 수정 페이지 이동
+	@RequestMapping(value="/userModify.html", method = RequestMethod.GET)
+	public ModelAndView userModify(HttpSession session) {
+		User loginUser = (User) session.getAttribute(WebConstants.USER_KEY);
+		ModelAndView view = new ModelAndView();
+		view.setViewName("userentryform/userModify");
+		view.addObject("loginUser", loginUser);
+		return view;
+	}
+	
+	// 유저 정보 수정 폼 전송
+	@RequestMapping(value="/userModify.html", method = RequestMethod.POST)
+	public ModelAndView userModifySubmit(User user, HttpSession session) {
+		User loginUser = (User) session.getAttribute(WebConstants.USER_KEY);
+		ModelAndView view = new ModelAndView();
+		view.setViewName("userentryform/userModifySuccess");
+		view.addObject("loginUser", loginUser);
+		userDaoImpl.modify(user);
+		return view;
 	}
 
 	@ModelAttribute

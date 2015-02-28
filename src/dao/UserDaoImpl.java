@@ -20,6 +20,9 @@ public class UserDaoImpl implements UserDao {
 
 	private static final String INSERT = "INSERT INTO user_account (user_id, user_name, password, postcode, address, email, job, birthday)"
 			+ " VALUES(:userId, :userName, :password, :postCode, :address, :email, :job, :birthDay)";
+	
+	private static final String MODIFY = "UPDATE user_account SET user_name=:userName, postcode=:postCode, address=:address, "
+			+ "email=:email, job=:job, birthDay=:birthDay WHERE user_id=:userId";
 
 	private SimpleJdbcTemplate template;
 
@@ -36,5 +39,10 @@ public class UserDaoImpl implements UserDao {
 	public void create(User user) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
 		this.template.update(UserDaoImpl.INSERT, parameterSource);
+	}
+	
+	public void modify(User user) {
+		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+		this.template.update(UserDaoImpl.MODIFY, parameterSource);
 	}
 }

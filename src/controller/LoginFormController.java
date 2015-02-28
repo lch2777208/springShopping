@@ -26,7 +26,7 @@ public class LoginFormController {
 	@Autowired
 	private Validator loginValidator;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value="/loginform/login.html", method = RequestMethod.GET)
 	public String toLoginView() {
 		return "loginform/login";
 	}
@@ -40,7 +40,7 @@ public class LoginFormController {
 	public ModelAndView onSubmit(User user, BindingResult bindingResult, HttpSession session) {
 
 		this.loginValidator.validate(user, bindingResult);
-
+		
 		ModelAndView modelAndView = new ModelAndView();
 		if (bindingResult.hasErrors()) {
 			modelAndView.getModel().putAll(bindingResult.getModel());
@@ -64,5 +64,11 @@ public class LoginFormController {
 			modelAndView.getModel().putAll(bindingResult.getModel());
 			return modelAndView;
 		}
+	}
+	
+	@RequestMapping(value="/loginform/logout.html")
+	public String logOut(HttpSession session){
+		session.invalidate();
+		return "loginform/login";
 	}
 }
